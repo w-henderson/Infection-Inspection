@@ -1,0 +1,76 @@
+List<Vector3> GeneratePath(Vector3 startPos, Vector3 endPos)
+    {
+        var returnValue = new List<Vector3>();
+        var bannedLocations = new List<Vector3>();
+        var position = startPos;
+        while (!returnValue.Contains(endPos))
+        {
+            var consideredDistances = new List<Vector3>();
+            consideredDistances.Add(new Vector3(position.x+0.5f, position.y));
+            consideredDistances.Add(new Vector3(position.x-0.5f, position.y));
+            consideredDistances.Add(new Vector3(position.x, position.y+0.5f));
+            consideredDistances.Add(new Vector3(position.x, position.y-0.5f));
+            var shortestDistance = consideredDistances[0];
+            foreach (Vector3 consider in consideredDistances)
+            {
+                if (!bannedLocations.Contains(consider))
+                {
+                    if (GameObject.Find("Wallace").GetComponent<Wallace>().AIPoints[(int)(consider.x * 2f) + 81, (int)(consider.y * 2f) + 81])
+                    {
+                        if ((endPos - consider).magnitude < (endPos - shortestDistance).magnitude)
+                        {
+                            shortestDistance = consider;
+                        }
+                    }
+                }
+            }
+            position = shortestDistance;
+            bannedLocations.Add(position);
+            returnValue.Add(shortestDistance);
+        }
+        return returnValue;
+    }
+
+    IEnumerator debugPathfinding(Vector3 startPos, Vector3 endPos)
+    {
+        var bannedLocations = new List<Vector3>();
+        var returnValue = new List<Vector3>();
+        var position = startPos;
+        while (!returnValue.Contains(endPos))
+        {
+            var consideredDistances = new List<Vector3>();
+            consideredDistances.Add(new Vector3(position.x + 0.5f, position.y));
+            consideredDistances.Add(new Vector3(position.x - 0.5f, position.y));
+            consideredDistances.Add(new Vector3(position.x, position.y + 0.5f));
+            consideredDistances.Add(new Vector3(position.x, position.y - 0.5f));
+            var shortestDistance = new Vector3(1000f,1000f,1000f);
+            foreach (Vector3 consider in consideredDistances)
+            {
+                if (!bannedLocations.Contains(consider))
+                {
+                    if (GameObject.Find("Wallace").GetComponent<Wallace>().AIPoints[(int)(consider.x * 2f) + 81, (int)(consider.y * 2f) + 81])
+                    {
+                        if ((endPos - consider).magnitude < (endPos - shortestDistance).magnitude)
+                        {
+                            shortestDistance = consider;
+                        }
+                    }
+                }
+            }
+            if (shortestDistance == new Vector3(1000f, 1000f, 1000f))
+            {
+                print("rip in the chat, we dont have a path");
+                break;
+            }
+            else
+            {
+                position = shortestDistance;
+                bannedLocations.Add(position);
+                while (transform.position != shortestDistance)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, shortestDistance, 0.1f);
+                    yield return null;
+                }
+            }
+        }
+    }

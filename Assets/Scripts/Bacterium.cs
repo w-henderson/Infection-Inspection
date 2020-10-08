@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bacterium : MonoBehaviour {
+public class Bacterium : MonoBehaviour
+{
 
     private List<GameObject> paths = new List<GameObject>();
 
@@ -52,12 +53,14 @@ public class Bacterium : MonoBehaviour {
             {
                 StopAllCoroutines();
                 StartCoroutine(eaten());
-            } else if (GameObject.FindObjectOfType<Wallace>().boosting)
+            }
+            else if (GameObject.FindObjectOfType<Wallace>().boosting)
             {
                 StopAllCoroutines();
                 StartCoroutine(eaten());
             }
-        } else if (collision.gameObject.tag == "BacterialObstacle")
+        }
+        else if (collision.gameObject.tag == "BacterialObstacle")
         {
             paused = true;
         }
@@ -79,11 +82,15 @@ public class Bacterium : MonoBehaviour {
 
     IEnumerator eaten()
     {
+        transform.GetChild(1).GetComponent<ParticleSystem>().Play();
         Destroy(GetComponent<Collider>());
-        if (!bossMode) {
-        	GameObject.Find("GameManager").GetComponent<Infection>().energy = Mathf.Clamp(GameObject.Find("GameManager").GetComponent<Infection>().energy + 2, 0f, 100f);
-        } else {
-        	GameObject.Find("GameManager").GetComponent<Infection>().energy = Mathf.Clamp(GameObject.Find("GameManager").GetComponent<Infection>().energy + 10, 0f, 100f);
+        if (!bossMode)
+        {
+            GameObject.Find("GameManager").GetComponent<Infection>().energy = Mathf.Clamp(GameObject.Find("GameManager").GetComponent<Infection>().energy + 2, 0f, 100f);
+        }
+        else
+        {
+            GameObject.Find("GameManager").GetComponent<Infection>().energy = Mathf.Clamp(GameObject.Find("GameManager").GetComponent<Infection>().energy + 10, 0f, 100f);
         }
         GetComponent<AudioSource>().Play();
         while (GetComponent<AudioSource>().isPlaying)
@@ -92,6 +99,10 @@ public class Bacterium : MonoBehaviour {
             {
                 transform.localScale -= new Vector3(0.01f, 0.01f, 0.01f);
             }
+            yield return null;
+        }
+        while (transform.GetChild(1).GetComponent<ParticleSystem>().isPlaying)
+        {
             yield return null;
         }
         Destroy(gameObject);
@@ -104,7 +115,8 @@ public class Bacterium : MonoBehaviour {
         if (Random.value > 0.5f)
         {
             option = path.transform.Find("Option1");
-        } else
+        }
+        else
         {
             option = path.transform.Find("Option2");
         }
@@ -120,7 +132,7 @@ public class Bacterium : MonoBehaviour {
         {
             while (transform.position != node)
             {
-                transform.right = Vector3.Lerp(transform.right,transform.position - node,0.05f);
+                transform.right = Vector3.Lerp(transform.right, transform.position - node, 0.05f);
                 if (!paused)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, node, bacteriumSpeed);
@@ -130,7 +142,8 @@ public class Bacterium : MonoBehaviour {
                         lastThirtyPositions.RemoveAt(0);
                     }
                     yield return new WaitForFixedUpdate();
-                } else
+                }
+                else
                 {
                     var bounce = lastThirtyPositions;
                     bounce.Reverse();

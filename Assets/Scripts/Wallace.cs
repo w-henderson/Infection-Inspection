@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wallace : MonoBehaviour {
+public class Wallace : MonoBehaviour
+{
 
     public Vector3 movementThisFrame = Vector3.zero;
     public float speed = 0.01f;
@@ -11,6 +12,7 @@ public class Wallace : MonoBehaviour {
 
     public float boostCost = 25f;
     public bool boosting = false;
+    public float boostMultiplier = 1f;
 
     public Joystick joystick;
     public Joybutton boost;
@@ -18,8 +20,9 @@ public class Wallace : MonoBehaviour {
 
     public bool[,] AIPoints = new bool[162, 162];
 
-    void Update()
+    void FixedUpdate()
     {
+        print(GetComponent<Rigidbody2D>().velocity.magnitude);
         if (GameObject.Find("GameManager").GetComponent<Infection>().alive && PreGame.gameRunning)
         {
             if (joystick.Vertical != 0 || joystick.Horizontal != 0)
@@ -29,7 +32,8 @@ public class Wallace : MonoBehaviour {
                     if (GameObject.Find("GameManager").GetComponent<Infection>().energy >= boostCost)
                     {
                         StartCoroutine(swoosh());
-                    } else
+                    }
+                    else
                     {
                         Notification.Send("Not enough energy!");
                     }
@@ -37,7 +41,7 @@ public class Wallace : MonoBehaviour {
                 }
                 //movementThisFrame += new Vector3(joystick.Horizontal * speed, joystick.Vertical * speed);
                 //movementThisFrame = Vector3.ClampMagnitude(movementThisFrame, maxSpeed);
-                movementThisFrame = new Vector3(joystick.Horizontal * speed * 15f, joystick.Vertical * speed * 15f);
+                movementThisFrame = new Vector3(joystick.Horizontal, joystick.Vertical) * speed * 15f;
                 slowingSpeed = movementThisFrame.magnitude;
             }
             else
@@ -46,26 +50,21 @@ public class Wallace : MonoBehaviour {
                 slowingSpeed = Mathf.Clamp(slowingSpeed, 0f, 0.15f);
                 movementThisFrame = Vector3.ClampMagnitude(movementThisFrame, slowingSpeed);
             }
+            var unadjustedMovementThisFrame = movementThisFrame;
             if (clotButton.pressed)
             {
                 GameObject.Find("GameManager").GetComponent<Infection>().SpawnClot(transform.position);
                 clotButton.pressed = false;
             }
             transform.Find("MovementDirection").GetComponent<LineRenderer>().SetPosition(0, transform.position);
-            transform.Find("MovementDirection").GetComponent<LineRenderer>().SetPosition(1, transform.position + (movementThisFrame * 15));
-            var arrowHeadNewPos = transform.position + (movementThisFrame * 15);
+            transform.Find("MovementDirection").GetComponent<LineRenderer>().SetPosition(1, transform.position + (unadjustedMovementThisFrame * 15));
+            var arrowHeadNewPos = transform.position + (unadjustedMovementThisFrame * 15);
             arrowHeadNewPos.z = -0.5f;
             GameObject.Find("ArrowHead").transform.position = arrowHeadNewPos;
-            GameObject.Find("ArrowHead").transform.right = movementThisFrame;
-            GameObject.Find("ArrowHead").transform.localScale = new Vector3(Mathf.Clamp(movementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), Mathf.Clamp(movementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), 1f);
-        }
-    }
-
-    public void LateUpdate()
-    {
-        if (PreGame.gameRunning)
-        {
-            GetComponent<Rigidbody2D>().MovePosition(transform.position + movementThisFrame);
+            GameObject.Find("ArrowHead").transform.right = unadjustedMovementThisFrame;
+            GameObject.Find("ArrowHead").transform.localScale = new Vector3(Mathf.Clamp(unadjustedMovementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), Mathf.Clamp(unadjustedMovementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), 1f);
+        
+            GetComponent<Rigidbody2D>().velocity = (movementThisFrame * boostMultiplier) * 3600f * Time.fixedDeltaTime;
         }
     }
 
@@ -81,12 +80,12 @@ public class Wallace : MonoBehaviour {
         GameObject.Find("Main Camera").GetComponent<AudioSource>().Play();
         for (float i = 0f; i < 0.5f; i += Time.deltaTime)
         {
-            movementThisFrame *= 3;
+            boostMultiplier = 3;
             yield return null;
         }
         for (float i = 0f; i < 1f; i += Time.deltaTime)
         {
-            movementThisFrame *= 3 - (i*2); // who knows what this math does
+            boostMultiplier = 3 - (i * 2); // who knows what this math does
             yield return null;
         }
         boosting = false;

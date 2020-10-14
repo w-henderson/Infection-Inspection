@@ -65,30 +65,5 @@ public class PreGame : MonoBehaviour
             GameObject.Find("ClotButton").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("ClotButton").GetComponent<RectTransform>().anchoredPosition, new Vector3(-400f, 150f, 0f), 0.05f);
             GameObject.Find("Boost").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("Boost").GetComponent<RectTransform>().anchoredPosition, new Vector3(-150f, 150f, 0f), 0.05f);
         }
-        else
-        {
-            if (instructionsShown)
-            {
-                GameObject.Find("StartScreen").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("StartScreen").GetComponent<RectTransform>().anchoredPosition, new Vector3(1500f, 0f, 0f), 0.05f);
-                GameObject.Find("Tutorial").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("Tutorial").GetComponent<RectTransform>().anchoredPosition, new Vector3(950f, 0f, 0f), 0.05f);
-                cam.position = Vector3.Lerp(cam.position, new Vector3(0.8f, -23.5f, -21f), 0.05f);
-            }
-            else
-            {
-                GameObject.Find("StartScreen").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("StartScreen").GetComponent<RectTransform>().anchoredPosition, Vector3.zero, 0.05f);
-                GameObject.Find("Tutorial").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("Tutorial").GetComponent<RectTransform>().anchoredPosition, new Vector3(-950f, 0f, 0f), 0.05f);
-                cam.position = Vector3.Lerp(cam.position, new Vector3(2f, -23.5f, -21f), 0.05f);
-            }
-            if (moreInfoShown)
-            {
-                GameObject.Find("TutorialPage1").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("TutorialPage1").GetComponent<RectTransform>().anchoredPosition, new Vector3(0f, 1080f, 0f), 0.05f);
-                GameObject.Find("TutorialPage2").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("TutorialPage2").GetComponent<RectTransform>().anchoredPosition, new Vector3(0f, 0f, 0f), 0.05f);
-            }
-            else
-            {
-                GameObject.Find("TutorialPage1").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("TutorialPage1").GetComponent<RectTransform>().anchoredPosition, new Vector3(0f, 0f, 0f), 0.05f);
-                GameObject.Find("TutorialPage2").GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GameObject.Find("TutorialPage2").GetComponent<RectTransform>().anchoredPosition, new Vector3(0f, -1080f, 0f), 0.05f);
-            }
-        }
     }
 }

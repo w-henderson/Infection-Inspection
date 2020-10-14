@@ -27,13 +27,13 @@ public class UIMenu : MonoBehaviour
     {
         if (active)
         {
-            GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GetComponent<RectTransform>().anchoredPosition, Vector3.zero, 0.2f);
-            GetComponent<RectTransform>().localScale = Vector3.Lerp(GetComponent<RectTransform>().localScale, Vector3.one, 0.2f);
+            GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GetComponent<RectTransform>().anchoredPosition, Vector3.zero, 12f * Time.deltaTime);
+            GetComponent<RectTransform>().localScale = Vector3.Lerp(GetComponent<RectTransform>().localScale, Vector3.one, 12f * Time.deltaTime);
         }
         else
         {
-            GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GetComponent<RectTransform>().anchoredPosition, linkedButton.anchoredPosition, 0.2f);
-            GetComponent<RectTransform>().localScale = Vector3.Lerp(GetComponent<RectTransform>().localScale, Vector3.zero, 0.2f);
+            GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(GetComponent<RectTransform>().anchoredPosition, linkedButton.anchoredPosition, 12f * Time.deltaTime);
+            GetComponent<RectTransform>().localScale = Vector3.Lerp(GetComponent<RectTransform>().localScale, Vector3.zero, 12f * Time.deltaTime);
         }
 
         if (Input.GetKeyDown(KeyCode.Return))

@@ -22,7 +22,6 @@ public class Wallace : MonoBehaviour
 
     void FixedUpdate()
     {
-        print(GetComponent<Rigidbody2D>().velocity.magnitude);
         if (GameObject.Find("GameManager").GetComponent<Infection>().alive && PreGame.gameRunning)
         {
             if (joystick.Vertical != 0 || joystick.Horizontal != 0)
@@ -63,7 +62,7 @@ public class Wallace : MonoBehaviour
             GameObject.Find("ArrowHead").transform.position = arrowHeadNewPos;
             GameObject.Find("ArrowHead").transform.right = unadjustedMovementThisFrame;
             GameObject.Find("ArrowHead").transform.localScale = new Vector3(Mathf.Clamp(unadjustedMovementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), Mathf.Clamp(unadjustedMovementThisFrame.magnitude / 0.375f, 0.125f, 0.4f), 1f);
-        
+
             GetComponent<Rigidbody2D>().velocity = (movementThisFrame * boostMultiplier) * 3600f * Time.fixedDeltaTime;
         }
     }
